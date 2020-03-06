@@ -7,9 +7,6 @@
         "adaptivesearchbackoffice",
         "adaptivesearchsamplesaddon",
         "adaptivesearchwebservices",
-        "yacceleratorbackoffice",
-        "yacceleratorinitialdata",
-        "yacceleratorfulfilmentprocess",
         "ycommercewebservices",
         "acceleratorwebservicesaddon",
         "orderselfserviceaddon",
@@ -55,7 +52,6 @@
         "assistedservicewebservices",
         "assistedservicepromotionaddon",
         "electronicsstore",
-        "yacceleratorstorefront",
         "acceleratorstorefrontcommons",
         "backoffice",
         "platformbackoffice",
@@ -71,76 +67,7 @@
         "yaddon"
     ],
     "storefrontAddons": [
-        {
-            "addon": "commerceorgsamplesaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "promotionenginesamplesaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "smarteditaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "textfieldconfiguratortemplateaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "assistedservicestorefront",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "assistedservicepromotionaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "customerticketingaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "orderselfserviceaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "adaptivesearchsamplesaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "multicountrysampledataaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "pcmbackofficesamplesaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "personalizationsearchsamplesaddon",
-            "storefront": "yacceleratorstorefront",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "acceleratorwebservicesaddon",
-            "storefront": "ycommercewebservices",
-            "template": "yacceleratorstorefront"
-        },
-        {
-            "addon": "cmsoccaddon",
-            "storefront": "ycommercewebservices",
-            "template": "ycommercewebservices"
-        }
+        
     ],
     "properties": [
         {
@@ -257,7 +184,7 @@
                     "contextPath": "/adaptivesearchwebservices"
                 },
                 {
-                    "name": "yacceleratorstorefront",
+                    "name": "myprojectstorefront",
                     "contextPath": "/webstore"
                 }
             ]
@@ -265,22 +192,7 @@
         {
             "name": "accstorefront",
             "properties": [
-                {
-                    "key": "spring.session.enabled",
-                    "value": "true"
-                },
-                {
-                    "key": "spring.session.yacceleratorstorefront.save",
-                    "value":"async"
-                },
-                {
-                    "key": "spring.session.yacceleratorstorefront.cookie.name",
-                    "value": "JSESSIONID"
-                },
-                {
-                    "key": "spring.session.yacceleratorstorefront.cookie.path",
-                    "value": "/"
-                },
+            
                 {
                     "key":"storefrontContextRoot",
                     "value":""
@@ -296,7 +208,7 @@
                     "contextPath": "/medias"
                 },
                 {
-                    "name": "yacceleratorstorefront",
+                    "name": "myprojectstorefront",
                     "contextPath": ""
                 },
                 {
