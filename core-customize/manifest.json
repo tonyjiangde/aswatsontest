@@ -29,13 +29,13 @@
         "multicountrysampledataaddon",
         "cmsoccaddon",
         "previewpersonalizationweb",
-        "myprojectbackoffice"
-        "myprojectcore"
-        "myprojectfacades"
-        "myprojectfulfilmentprocess"
-        "myprojectinitialdata"
-        "myprojectstorefront"
-        "myprojecttest"
+        "myprojectbackoffice",
+        "myprojectcore",
+        "myprojectfacades",
+        "myprojectfulfilmentprocess",
+        "myprojectinitialdata",
+        "myprojectstorefront",
+        "myprojecttest",
         "personalizationcmsweb",
         "personalizationsmartedit",
         "personalizationpromotionssmartedit",
