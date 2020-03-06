@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ Copyright (c) 2019 SAP SE or an SAP affiliate company. All rights reserved.
+--><extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+        	
+    
+    <extension abstractclassprefix="Generated" classprefix="MyprojectStorefront" name="myprojectstorefront" usemaven="false">
+                		
+        
+        
+        <requires-extension name="acceleratorstorefrontcommons"/>
+                		
+        
+        <requires-extension name="myprojectfacades"/>
+                		
+        
+        <webmodule jspcompile="false" webroot="/myprojectstorefront"/>
+                		
+        
+        		
+        
+        <meta key="extgen-template-extension" value="true"/>
+                	
+    
+    </extension>
+        
+
+</extensioninfo>
