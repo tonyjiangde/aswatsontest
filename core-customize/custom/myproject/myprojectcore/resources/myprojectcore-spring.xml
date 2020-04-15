@@ -538,4 +538,15 @@
 		<property name="itemCleanupHooks" ref="csTicketRetentionHooks"/>
 		<property name="ticketBusinessService" ref="ticketBusinessService"/>
 	</bean>
+	
+	
+	<bean id="localMediaFileCacheService" class="org.training.platform.media.storage.impl.MyLocalMediaFileCacheService">
+		<property name="cacheRecreator" ref="localMediFileCacheRecreator" />
+		<property name="storageRegistry" ref="mediaStorageRegistry" />
+		<property name="storageStrategy" ref="localFileMediaStorageStrategy" />
+		<property name="storageConfigService" ref="mediaStorageConfigService" />
+		<property name="cacheController" ref="defaultCacheController" />
+		<property name="mainDataDir" value="#{T(de.hybris.platform.util.MediaUtil).getLocalStorageDataDir()}" />
+        <property name="mediaCacheRegion" ref="mediaCacheRegion"/>
+    </bean>
 </beans>
