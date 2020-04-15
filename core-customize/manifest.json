@@ -1,6 +1,6 @@
 {
-    "commerceSuiteVersion":"1905",
-    "useCloudExtensionPack": true,
+    "commerceSuiteVersion":"1905.6",
+    "useCloudExtensionPack": false,
     "extensions": [
         "modeltacceleratorservices",
         "adaptivesearchsolr",
@@ -26,7 +26,13 @@
         "multicountrysampledataaddon",
         "cmsoccaddon",
         "previewpersonalizationweb",
+        "myprojectbackoffice",
         "myprojectcore",
+        "myprojectfacades",
+        "myprojectfulfilmentprocess",
+        "myprojectinitialdata",
+        "myprojectstorefront",
+        "myprojecttest",
         "personalizationcmsweb",
         "personalizationsmartedit",
         "personalizationpromotionssmartedit",
