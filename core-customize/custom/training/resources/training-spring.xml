@@ -10,6 +10,7 @@
            http://www.springframework.org/schema/aop
            http://www.springframework.org/schema/aop/spring-aop.xsd">
 
+
  <bean id="localMediaFileCacheService" class="org.training.platform.media.storage.impl.MyLocalMediaFileCacheService">
 		<property name="cacheRecreator" ref="localMediFileCacheRecreator" />
 		<property name="storageRegistry" ref="mediaStorageRegistry" />
@@ -19,6 +20,16 @@
 		<property name="mainDataDir" value="#{T(de.hybris.platform.util.MediaUtil).getLocalStorageDataDir()}" />
         <property name="mediaCacheRegion" ref="mediaCacheRegion"/>
     </bean>
+
+
+    <bean id="core.mediaManager" class="de.hybris.platform.jalo.media.MediaManager">
+		<property name="mediaStorageRegistry" ref="mediaStorageRegistry" />
+		<property name="mediaStorageConfigService" ref="mediaStorageConfigService" />
+		<property name="localMediaFileCache" ref="localMediaFileCacheService" />
+		<property name="locationHashService" ref="mediaLocationHashService" />
+		<property name="mimeService" ref="mimeService" />
+		<property name="mediaHeadersRegistry" ref="mediaHeadersRegistry" />
+	</bean>
 	<!--
 	The hybris platform provides one single Spring application context for beans located at the jalo layer.
 	Each extension can add beans to this context by specifying them at this configuration file.
