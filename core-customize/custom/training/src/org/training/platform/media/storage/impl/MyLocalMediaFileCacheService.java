@@ -1,6 +1,8 @@
 package org.training.platform.media.storage.impl;
 
+
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.media.storage.LocalMediaFileCacheService;
 import de.hybris.platform.media.storage.LocalStoringStrategy;
 import de.hybris.platform.media.storage.MediaMetaData;
 import de.hybris.platform.media.storage.MediaStorageConfigService;
@@ -50,13 +52,20 @@ import com.google.common.primitives.Ints;
 
 
 /**
- * @author i314119
+ * <p>
+ * Default implementation of <code>LocalMediaFileCache</code> interface. Allows to cache locally any stream and returns
+ * binary data as <code>File</code> or <code>FileInputStream</code> from local cache.
+ * </p>
+ * <p>
+ * To configure folder to use local cache use following property key:
+ * <p>
  *
+ * <pre>
+ * folder.folderQualifier.local.cache = true
+ * </pre>
  */
-public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheService
-
+public class MyLocalMediaFileCacheService implements LocalMediaFileCacheService
 {
-
 	private static final Logger LOG = Logger.getLogger(DefaultLocalMediaFileCacheService.class);
 	private static final String DEFAULT_CACHE_FOLDER = "cache";
 	private static final int GET_RESOURCE_MAX_RETRIES = 5;
@@ -75,7 +84,6 @@ public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheServ
 	/**
 	 * Recreates cache and adds lifecycle callback after bean construction
 	 */
-	@Override
 	@PostConstruct
 	public void init()
 	{
@@ -273,7 +281,7 @@ public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheServ
 			final String encodedLocation = Base64.getUrlEncoder().encodeToString(location.getBytes());
 			final StringBuilder builder = new StringBuilder(encodedLocation);
 			builder.append(CACHE_FILE_NAME_DELIM).append(UUID.randomUUID());
-			return String.valueOf(builder.toString().hashCode());
+			return builder.toString();
 		}
 
 		public boolean isLoaded(final MediaCacheUnit cacheUnit)
@@ -641,53 +649,45 @@ public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheServ
 		}
 	}
 
-	@Override
 	@Required
 	public void setMainDataDir(final File mainDataDir)
 	{
 		this.mainDataDir = mainDataDir;
 	}
 
-	@Override
 	@Required
 	public void setCacheController(final CacheController cacheController)
 	{
 		this.cacheController = cacheController;
 	}
 
-	@Override
 	@Required
 	public void setStorageRegistry(final MediaStorageRegistry storageRegistry)
 	{
 		this.storageRegistry = storageRegistry;
 	}
 
-	@Override
 	@Required
 	public void setStorageStrategy(final LocalFileMediaStorageStrategy storageStrategy)
 	{
 		this.storageStrategy = storageStrategy;
 	}
 
-	@Override
 	@Required
 	public void setMediaCacheRegion(final MediaCacheRegion mediaCacheRegion)
 	{
 		this.mediaCacheRegion = mediaCacheRegion;
 	}
 
-	@Override
 	@Required
 	public void setStorageConfigService(final MediaStorageConfigService storageConfigService)
 	{
 		this.storageConfigService = storageConfigService;
 	}
 
-	@Override
 	@Required
 	public void setCacheRecreator(final MediaCacheRecreator cacheRecreator)
 	{
 		this.cacheRecreator = cacheRecreator;
 	}
-
 }
