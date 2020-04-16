@@ -1,6 +1,5 @@
 {
-    "commerceSuiteVersion":"1905",
-    "useCloudExtensionPack": true,
+    "commerceSuiteVersion":"1811",
     "extensions": [
         "commerceservicesbackoffice",
         "solrfacetsearchbackoffice",
