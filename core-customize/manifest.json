@@ -1,20 +1,17 @@
 {
-    "commerceSuiteVersion":"1905.6",
-    "useCloudExtensionPack": false,
+    "commerceSuiteVersion":"1905",
+    "useCloudExtensionPack": true,
     "extensions": [
-        "modeltacceleratorservices",
-        "adaptivesearchsolr",
-        "adaptivesearchbackoffice",
-        "adaptivesearchsamplesaddon",
-        "adaptivesearchwebservices",
+        "commerceservicesbackoffice",
+        "solrfacetsearchbackoffice",
+        "solrserver",
+        "yacceleratorcockpits",
+        "yacceleratorinitialdata",
+        "yacceleratorstorefront",
         "ycommercewebservices",
+        "electronicsstore",
+        "apparelstore",
         "acceleratorwebservicesaddon",
-        "orderselfserviceaddon",
-        "customerticketingaddon",
-        "commerceorgsamplesaddon",
-        "droolsruleengineservices",
-        "couponfacades",
-        "promotionenginesamplesaddon",
         "cmswebservices",
         "smarteditwebservices",
         "cmssmarteditwebservices",
@@ -23,16 +20,8 @@
         "smartedit",
         "cmssmartedit",
         "cmsbackoffice",
-        "multicountrysampledataaddon",
-        "cmsoccaddon",
+        "previewwebservices",
         "previewpersonalizationweb",
-        "myprojectbackoffice",
-        "myprojectcore",
-        "myprojectfacades",
-        "myprojectfulfilmentprocess",
-        "myprojectinitialdata",
-        "myprojectstorefront",
-        "myprojecttest",
         "personalizationcmsweb",
         "personalizationsmartedit",
         "personalizationpromotionssmartedit",
@@ -44,30 +33,14 @@
         "personalizationcmsbackoffice",
         "personalizationsearchbackoffice",
         "personalizationsearchsmartedit",
-        "personalizationsearchweb",
-        "personalizationsearchsamplesaddon",
-        "textfieldconfiguratortemplatebackoffice",
-        "textfieldconfiguratortemplateaddon",
-        "assistedservicestorefront",
-        "assistedservicewebservices",
-        "assistedservicepromotionaddon",
-        "electronicsstore",
-        "acceleratorstorefrontcommons",
-        "backoffice",
-        "platformbackoffice",
-        "basecommercebackoffice",
-        "adaptivesearchbackoffice",
-        "commerceservicesbackoffice",
-        "solrfacetsearchbackoffice",
-        "customersupportbackoffice",
-        "rulebuilderbackoffice",
-        "couponbackoffice",
-        "pcmbackofficesamplesaddon",
-        "cmsbackoffice",
-        "yaddon"
+        "myprojectcore",
     ],
     "storefrontAddons": [
-        
+        {
+            "addon": "smarteditaddon",
+            "storefront": "yacceleratorstorefront",
+            "template": "yacceleratorstorefront"
+        }
     ],
     "properties": [
         {
@@ -92,23 +65,23 @@
             "key": "test.property.2",
             "value": "test-property-2-value"
         },
-		{
-			"key": "googleApiKey",
-			"value": ""
-		},
-		{
-			"key": "multicountrysampledataaddon.import.active",
-			"value": "false"
-		}
+        {
+            "key": "googleApiKey",
+            "value": ""
+        },
+        {
+            "key": "multicountrysampledataaddon.import.active",
+            "value": "false"
+        }
     ],
     "aspects": [
         {
             "name": "backoffice",
             "properties": [
-	                {
-	                    "key":"storefrontContextRoot",
-	                    "value":"/AzureHackathonstorefront"
-	                }
+                    {
+                        "key":"storefrontContextRoot",
+                        "value":"/yacceleratorstorefront"
+                    }
             ],
             "webapps": [
                 {
@@ -122,7 +95,11 @@
                 {
                     "name": "backoffice",
                     "contextPath": "/backoffice"
-                }, 
+                },
+                {
+                    "name": "yacceleratorstorefront",
+                    "contextPath": "/yacceleratorstorefront"
+                },
                 {
                     "name": "acceleratorservices",
                     "contextPath": "/acceleratorservices"
@@ -178,21 +155,28 @@
                 {
                     "name": "personalizationsearchsmartedit",
                     "contextPath": "/personalizationsearchsmartedit"
-                },
-                {
-                    "name": "adaptivesearchwebservices",
-                    "contextPath": "/adaptivesearchwebservices"
-                },
-                {
-                    "name": "myprojectstorefront",
-                    "contextPath": "/webstore"
                 }
             ]
         },
         {
             "name": "accstorefront",
             "properties": [
-            
+                {
+                    "key": "spring.session.enabled",
+                    "value": "true"
+                },
+                {
+                    "key": "spring.session.yacceleratorstorefront.save",
+                    "value":"async"
+                },
+                {
+                    "key": "spring.session.yacceleratorstorefront.cookie.name",
+                    "value": "JSESSIONID"
+                },
+                {
+                    "key": "spring.session.yacceleratorstorefront.cookie.path",
+                    "value": "/"
+                },
                 {
                     "key":"storefrontContextRoot",
                     "value":""
@@ -208,12 +192,8 @@
                     "contextPath": "/medias"
                 },
                 {
-                    "name": "myprojectstorefront",
+                    "name": "yacceleratorstorefront",
                     "contextPath": ""
-                },
-                {
-                    "name": "hac",
-                    "contextPath": "/hac"
                 },
                 {
                     "name": "acceleratorservices",
@@ -222,6 +202,10 @@
                 {
                     "name": "ycommercewebservices",
                     "contextPath": "/rest"
+                },
+                {
+                    "name": "hac",
+                    "contextPath": "/hac"
                 },
                 {
                     "name": "oauth2",
