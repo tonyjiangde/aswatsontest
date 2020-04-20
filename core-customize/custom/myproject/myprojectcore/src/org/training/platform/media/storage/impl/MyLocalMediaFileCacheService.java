@@ -273,10 +273,14 @@ public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheServ
 
 		private String buildMediaId(final String location)
 		{
-			final String encodedLocation = Base64.getUrlEncoder().encodeToString(location.getBytes());
+			String encodedLocation = Base64.getUrlEncoder().encodeToString(location.getBytes());
+			if (encodedLocation.length() > 200)
+			{
+				encodedLocation = encodedLocation.substring(0, 200);
+			}
 			final StringBuilder builder = new StringBuilder(encodedLocation);
 			builder.append(CACHE_FILE_NAME_DELIM).append(UUID.randomUUID());
-			return String.valueOf(builder.toString().hashCode());
+			return builder.toString();
 		}
 
 		public boolean isLoaded(final MediaCacheUnit cacheUnit)
