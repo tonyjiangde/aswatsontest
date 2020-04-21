@@ -1,7 +1,5 @@
-/**
- *
- */
 package org.training.platform.media.storage.impl;
+
 
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.media.storage.LocalStoringStrategy;
@@ -25,8 +23,6 @@ import de.hybris.platform.regioncache.region.CacheRegion;
 import de.hybris.platform.util.MediaUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,7 +34,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.PostConstruct;
 
@@ -47,19 +42,24 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
-import com.google.common.primitives.Ints;
 
 
 /**
- * @author i314119
+ * <p>
+ * Default implementation of <code>LocalMediaFileCache</code> interface. Allows to cache locally any stream and returns
+ * binary data as <code>File</code> or <code>FileInputStream</code> from local cache.
+ * </p>
+ * <p>
+ * To configure folder to use local cache use following property key:
+ * <p>
  *
+ * <pre>
+ * folder.folderQualifier.local.cache = true
+ * </pre>
  */
 public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheService
-
 {
-
 	private static final Logger LOG = Logger.getLogger(DefaultLocalMediaFileCacheService.class);
 	private static final String DEFAULT_CACHE_FOLDER = "cache";
 	private static final int GET_RESOURCE_MAX_RETRIES = 5;
@@ -108,6 +108,7 @@ public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheServ
 	@Override
 	public File storeOrGetAsFile(final MediaFolderConfig config, final String location, final StreamGetter streamGetter)
 	{
+
 		final File file = getMediaCacheFile(config, location, streamGetter);
 
 		if (file == null)
@@ -308,23 +309,6 @@ public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheServ
 		return config.getParameter(DefaultSettingKeys.LOCAL_CACHE_ROOT_FOLDER_KEY.getKey(), String.class, DEFAULT_CACHE_FOLDER);
 	}
 
-	public static class MediaCacheFileInputStream extends FileInputStream
-	{
-		private final MediaCacheUnit cacheUnit;
-
-		public MediaCacheFileInputStream(final File file, final MediaCacheUnit cacheUnit) throws FileNotFoundException
-		{
-			super(file);
-			this.cacheUnit = cacheUnit;
-		}
-
-		@Override
-		public void close() throws IOException
-		{
-			super.close();
-			cacheUnit.releaseUsageAndRemoveIfMarked();
-		}
-	}
 
 	public static class MediaCacheKey implements CacheKey
 	{
@@ -428,176 +412,7 @@ public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheServ
 		}
 	}
 
-	public static class MediaCacheUnit
-	{
-		private static final Logger LOG = Logger.getLogger(MediaCacheUnit.class);
-		public static final int MIN_UNIT_WEIGHT_IN_KB = 1;
 
-		private final File cachedFile;
-
-		private volatile boolean markedAsEvicted = false;
-		private volatile boolean takenAsFile = false;
-		private final AtomicInteger usageCounter = new AtomicInteger();
-
-		public MediaCacheUnit(final File cachedFile)
-		{
-			Preconditions.checkNotNull(cachedFile, "Cached file must not be null");
-			Preconditions.checkArgument(cachedFile.exists(),
-					"MediaCacheUnit may only cache existing files [file: " + cachedFile.getAbsolutePath() + " does not exist]");
-			this.cachedFile = cachedFile;
-		}
-
-		public boolean isCachedFileExists()
-		{
-			return cachedFile != null && cachedFile.exists();
-		}
-
-		/**
-		 * This method returns direct cached File instance. It marks cache unit with that information thus any possible
-		 * eviction to that unit will write special zero-bytes marker file in cache folder and will NOT remove file
-		 * itself. All marked cache files will be removed on next system restart or may be removed by system administrator
-		 * manually. Remember that in case of getting cache files as regular File instances may exceed declared cache size
-		 * due to evictions.
-		 *
-		 * @return cached file instance
-		 */
-		public synchronized File getFile()
-		{
-			if (markedAsEvicted || !cachedFile.exists())
-			{
-				return null;
-			}
-
-			takenAsFile = true;
-			return cachedFile;
-		}
-
-		public synchronized InputStream getStream()
-		{
-			if (isMarkedAsEvictedAndNotUsed())
-			{
-				return null;
-			}
-
-			try
-			{
-				usageCounter.incrementAndGet();
-				return new MediaCacheFileInputStream(cachedFile, this);
-			}
-			catch (final FileNotFoundException e)
-			{
-				throw new IllegalStateException(e.getMessage(), e);
-			}
-		}
-
-		private boolean isMarkedAsEvictedAndNotUsed()
-		{
-			return markedAsEvicted && usageCounter.get() <= 0;
-		}
-
-		public synchronized void markResourceAsEvicted()
-		{
-			markedAsEvicted = true;
-		}
-
-		protected void releaseUsageAndRemoveIfMarked()
-		{
-			final int currentCounter = usageCounter.decrementAndGet();
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug(this + " usage was released [usage counter: " + currentCounter + "]");
-			}
-
-			tryRemoveResourceOrWriteEvictedMarker();
-		}
-
-		public synchronized void tryRemoveResourceOrWriteEvictedMarker()
-		{
-			if (canRemove())
-			{
-				removeResource();
-			}
-			else if (canWriteEvictedMarkerFile())
-			{
-				writeEvictedMarkerFile();
-			}
-		}
-
-		private synchronized boolean canRemove()
-		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Can remove cached file? ==> " + (markedAsEvicted && usageCounter.get() <= 0 && !takenAsFile)
-						+ " [markedAsEvicted: " + markedAsEvicted + ", usageConuter: " + usageCounter.get() + ", takenAsFile: "
-						+ takenAsFile + ", cachedFile: " + cachedFile + "]");
-			}
-			return markedAsEvicted && usageCounter.get() <= 0 && !takenAsFile;
-		}
-
-		private synchronized boolean canWriteEvictedMarkerFile()
-		{
-			return markedAsEvicted && takenAsFile && isCachedFileExists();
-		}
-
-		/**
-		 * Removes resource without any checks. Unsafe and not thread safe!
-		 */
-		protected void removeResource()
-		{
-			if (isCachedFileExists())
-			{
-				final boolean isDeleted = cachedFile.delete();
-				logFileDeletion(isDeleted);
-			}
-		}
-
-		private void logFileDeletion(final boolean isDeleted)
-		{
-			if (isDeleted)
-			{
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("Removed cached file: " + cachedFile);
-				}
-			}
-			else
-			{
-				LOG.error("Cannot remove cached file");
-			}
-		}
-
-		private void writeEvictedMarkerFile()
-		{
-			try
-			{
-				final File markerFile = new File(cachedFile.getAbsolutePath() + ".EVICTED");
-				markerFile.createNewFile();
-			}
-			catch (final IOException e)
-			{
-				throw new IllegalStateException(e.getMessage(), e);
-			}
-		}
-
-		public int getWeight()
-		{
-			return convertNumBytesToCacheUnitWeight(cachedFile.length());
-		}
-
-		public static int convertNumBytesToCacheUnitWeight(final long numBytes)
-		{
-			final long val = numBytes / 1024;
-			return val == 0 ? MIN_UNIT_WEIGHT_IN_KB : Ints.checkedCast(val);
-		}
-
-		@Override
-		public String toString()
-		{
-			return "MediaCacheUnit [cachedFile=" + cachedFile + ", markedAsEvicted=" + markedAsEvicted + ", usageCounter="
-					+ usageCounter + "]";
-		}
-
-	}
 
 	private static class MediaCacheLifecycleCallback implements CacheLifecycleCallback
 	{
@@ -643,7 +458,23 @@ public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheServ
 				{
 					LOG.debug("Trying to remove file for unit " + value);
 				}
-				((MediaCacheUnit) value).removeResource();
+
+				if (((MediaCacheUnit) value).isCachedFileExists())
+				{
+					final boolean isDeleted = ((MediaCacheUnit) value).getFile().delete();
+					if (isDeleted)
+					{
+						if (LOG.isDebugEnabled())
+						{
+							LOG.debug("Removed cached file: " + ((MediaCacheUnit) value).getFile());
+						}
+					}
+					else
+					{
+						LOG.error("Cannot remove cached file");
+					}
+				}
+
 			}
 		}
 	}
@@ -696,5 +527,4 @@ public class MyLocalMediaFileCacheService extends DefaultLocalMediaFileCacheServ
 	{
 		this.cacheRecreator = cacheRecreator;
 	}
-
 }
