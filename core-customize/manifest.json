@@ -31,8 +31,7 @@
         "personalizationpromotionsbackoffice",
         "personalizationcmsbackoffice",
         "personalizationsearchbackoffice",
-        "personalizationsearchsmartedit",
-        "training"
+        "personalizationsearchsmartedit"
     ],
     "storefrontAddons": [
         {
